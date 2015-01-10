@@ -10,12 +10,14 @@ public class Map implements Tick {
     private ArrayList<Entity> entities;
     private Vector2f offset;
     private Physics physics;
+    private int width, height;
 
-    public Map() {
+    public Map(int width, int height) {
         this.entities = new ArrayList<Entity>();
         this.physics = new Physics();
         this.offset = new Vector2f();
-
+        this.width = width;
+        this.height = height;
     }
 
     public void draw(PixGraphics graphics) {
@@ -33,6 +35,37 @@ public class Map implements Tick {
     }
 
     public void tick() {
+        resetPositions();
         physics.doPhysics(entities);
+    }
+
+    public void resetPositions() {
+        for (Entity entity : entities) {
+            int clip = 0;
+            if (entity.getMax().getX() < 0) {
+                clip |= 1;
+            } else if (entity.getMin().getX() > width) {
+                clip |= 1 << 1;
+            }
+            if (entity.getMax().getY() < 0) {
+                clip |= 1 << 2;
+            } else if (entity.getMin().getY() > height) {
+                clip |= 1 << 3;
+            }
+
+            if ((entity instanceof Bullet) && clip != 0)
+                entity.destroy();
+
+            if ((clip & 1) == 1 ) {
+                entity.setPosTo(width, entity.getPosition().getY());
+            } else if ((clip & 2) == 2) {
+                entity.setPosTo(0, entity.getPosition().getY());
+            }
+            if ((clip & 4) == 4) {
+                entity.setPosTo(entity.getPosition().getX(), height);
+            } else if ((clip & 8) == 8) {
+                entity.setPosTo(entity.getPosition().getX(), 0);
+            }
+        }
     }
 }

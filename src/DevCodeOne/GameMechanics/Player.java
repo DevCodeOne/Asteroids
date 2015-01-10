@@ -10,10 +10,11 @@ public class Player extends Entity {
     public Player(Vector2f[] vertices, Vector2f position, int id, String name) {
         super(vertices, position, id);
         createBoundingBox();
+        setMaxVelocity(2.5f);
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {
-        graphics.draw_line(100, 100, 100 + direction.getX() * 30, 100 + direction.getY() * 30);
+        //graphics.draw_line(100, 100, 100 + direction.getX() * 30, 100 + direction.getY() * 30);
         super.draw(graphics, offx, offy);
     }
 
@@ -27,14 +28,14 @@ public class Player extends Entity {
 
     public void incVelocityBy(float x, float y) {
         velocity.add(x, y);
-        if (velocity.len() > Physics.MAX_VELOCITY_SQUARE*0.5f) {
+        if (velocity.len() > MAX_VELOCITY) {
             velocity.sub(x, y);
         }
     }
 
     public void setVelocityTo(float x, float y) {
         Vector2f new_velocity = new Vector2f(x, y);
-        if (new_velocity.len() < Physics.MAX_VELOCITY_SQUARE*0.5f)
+        if (new_velocity.len() < MAX_VELOCITY)
             velocity.set(x, y);
     }
 

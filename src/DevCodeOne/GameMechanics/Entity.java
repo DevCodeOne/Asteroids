@@ -3,8 +3,6 @@ package DevCodeOne.GameMechanics;
 import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
 
-import java.awt.geom.Rectangle2D;
-
 public class Entity {
 
     protected Vector2f vertices[];
@@ -13,6 +11,8 @@ public class Entity {
     protected Vector2f min;
     protected Vector2f max;
     protected int id;
+    protected float MAX_VELOCITY = 5;
+    protected boolean dead;
 
     public Entity(Vector2f vertices[], Vector2f position, int id) {
         this.vertices = vertices;
@@ -28,6 +28,14 @@ public class Entity {
             int next = (i + 1) % vertices.length;
             graphics.draw_line(vertices[i].getX()+gesx, vertices[i].getY()+gesy, vertices[next].getX()+gesx, vertices[next].getY()+gesy);
         }
+    }
+
+    public void setMaxVelocity(float velocity) {
+        this.MAX_VELOCITY = velocity;
+    }
+
+    public float getMaxVelocity() {
+        return MAX_VELOCITY;
     }
 
     public void drawBoundingBox(PixGraphics graphics, int offx, int offy) {
@@ -94,16 +102,22 @@ public class Entity {
 
     public void incVelocityBy(float x, float y) {
         velocity.add(x, y);
-        if (velocity.len() > Physics.MAX_VELOCITY_SQUARE) {
+        if (velocity.len() > MAX_VELOCITY) {
             velocity.sub(x, y);
         }
     }
 
     public void setVelocityTo(float x, float y) {
         Vector2f new_velocity = new Vector2f(x, y);
-        if (new_velocity.len() < Physics.MAX_VELOCITY_SQUARE)
+        if (new_velocity.len() < MAX_VELOCITY)
             velocity.set(x, y);
     }
+
+    public Entity[] collideEvent(Entity entity) { return null; }
+
+    public Vector2f getMin() { return min; }
+
+    public Vector2f getMax() { return max; }
 
     public Vector2f getPosition() {
         return position;
@@ -117,7 +131,11 @@ public class Entity {
         return new Vector2f(vertices[index].getX() + position.getX(), vertices[index].getY() + position.getY());
     }
 
+    public void destroy() { dead = true; }
+
     public Vector2f[] getVertices() { return vertices; }
 
     public int getID() { return id; }
+
+    public boolean isDead() { return dead; }
 }
