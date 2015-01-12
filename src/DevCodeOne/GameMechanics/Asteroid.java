@@ -26,7 +26,7 @@ public class Asteroid extends Entity {
     }
 
     @Override
-    public Entity[] collideEvent(Entity entity) {
+    public Entity[] collideEvent(Entity entity, Map map) {
         if (getSize() <= 12.5f) {
             destroy();
             return null;
@@ -36,6 +36,14 @@ public class Asteroid extends Entity {
         asteroids[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), 1337);
         asteroids[0].setVelocityTo(-getVelocity().getY(), getVelocity().getX());
         asteroids[1].setVelocityTo(getVelocity().getY(), -getVelocity().getX());
+        Particle particles[] = new Particle[512];
+        float it = (float) Math.PI * 2 / particles.length;
+        float val = 0;
+        for (int i = 0; i < particles.length; i++) {
+            particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * 2.5f, (float) Math.sin(val) * 2.5f), 50);
+            val += it;
+        }
+        map.addParticles(particles);
         destroy();
         return asteroids;
     }

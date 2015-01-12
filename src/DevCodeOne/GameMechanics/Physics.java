@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Physics {
 
-    public void doPhysics(ArrayList<Entity> entities) {
+    public void doPhysics(ArrayList<Entity> entities, Map map) {
         ArrayList<Entity> spawn = new ArrayList<Entity>();
         for (Entity entity : entities) {
             entity.changePosBy(entity.getVelocity().getX(), entity.getVelocity().getY());
@@ -15,7 +15,7 @@ public class Physics {
             for (int j = 0; j < entities.size(); j++) {
                 if (entities.get(i) != entities.get(j) && !(entities.get(i) instanceof Asteroid && entities.get(j) instanceof Asteroid)) {
                     if (Collider.collides(entities.get(i), entities.get(j))) {
-                        Entity spawnarr[] = entities.get(i).collideEvent(entities.get(j));
+                        Entity spawnarr[] = entities.get(i).collideEvent(entities.get(j), map);
                         if (spawnarr != null) {
                             for (Entity toadd : spawnarr) {
                                 if (toadd != null) {

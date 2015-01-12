@@ -113,7 +113,7 @@ public class Entity {
             velocity.set(x, y);
     }
 
-    public Entity[] collideEvent(Entity entity) { return null; }
+    public Entity[] collideEvent(Entity entity, Map map) { return null; }
 
     public Vector2f getMin() { return min; }
 

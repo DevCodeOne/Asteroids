@@ -16,7 +16,7 @@ public class Bullet extends Entity {
     }
 
     @Override
-    public Entity[] collideEvent(Entity entity) {
+    public Entity[] collideEvent(Entity entity, Map map) {
         destroy();
         return null;
     }

@@ -21,12 +21,12 @@ public class PixGraphics {
         my = dy / len;
         len *= 4;
         while(len-- > 0) {
-            render_target.set_pixel((int) x, (int) y, 200 << 16 | 50 << 8 | 50);
+            render_target.set_pixel((int) x, (int) y, 200 | 50 << 8 | 50 << 16);
             float xx3 = x;
             float yy3 = y;
             float xx4 = x;
             float yy4 = y;
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 int upixel3 = render_target.get_pixel((int) (xx3), (int) (yy3));
                 int upixel4 = render_target.get_pixel((int) (xx4), (int) (yy4));
 
@@ -43,6 +43,12 @@ public class PixGraphics {
             }
             x += mx*0.25f;
             y += my*0.25f;
+        }
+    }
+
+    public void dot(float x, float y) {
+        if (x > 0 && x < render_target.get_width() && y > 0 && y < render_target.get_height()) {
+            render_target.set_pixel((int) x, (int) y, 200 | 50 << 8 | 50 << 16);
         }
     }
 

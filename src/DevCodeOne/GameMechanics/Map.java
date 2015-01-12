@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Map implements Tick {
 
     private ArrayList<Entity> entities;
+    private ParticleList particleList;
     private Vector2f offset;
     private Physics physics;
     private int width, height;
@@ -18,12 +19,24 @@ public class Map implements Tick {
         this.offset = new Vector2f();
         this.width = width;
         this.height = height;
+        this.particleList = new ParticleList();
     }
 
     public void draw(PixGraphics graphics) {
         for (Entity entity : entities) {
             entity.draw(graphics, (int)offset.getX(), (int)offset.getY());
         }
+        particleList.draw(graphics, (int) offset.getX(), (int) offset.getY());
+    }
+
+    public void addParticles(Particle particles[]) {
+        for (Particle particle : particles) {
+            particleList.addParticle(particle);
+        }
+    }
+
+    public void addParticle(Particle particle) {
+        particleList.addParticle(particle);
     }
 
     public void scroll(float x, float y) {
@@ -36,7 +49,8 @@ public class Map implements Tick {
 
     public void tick() {
         resetPositions();
-        physics.doPhysics(entities);
+        physics.doPhysics(entities, this);
+        particleList.iterate();
     }
 
     public void resetPositions() {
