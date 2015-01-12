@@ -3,6 +3,8 @@ package DevCodeOne.Graphics;
 public class PixGraphics {
 
     private Pixmap render_target;
+    private int color = 255;
+    public static final int BLUE = 200 | 50 << 8 | 50 << 16;
 
     public PixGraphics(Pixmap pixmap) {
         this.render_target = pixmap;
@@ -21,7 +23,7 @@ public class PixGraphics {
         my = dy / len;
         len *= 4;
         while(len-- > 0) {
-            render_target.set_pixel((int) x, (int) y, 200 | 50 << 8 | 50 << 16);
+            render_target.set_pixel((int) x, (int) y, color);
             float xx3 = x;
             float yy3 = y;
             float xx4 = x;
@@ -46,10 +48,19 @@ public class PixGraphics {
         }
     }
 
-    public void dot(float x, float y) {
+    public void dot(float x, float y, int size) {
         if (x > 0 && x < render_target.get_width() && y > 0 && y < render_target.get_height()) {
-            render_target.set_pixel((int) x, (int) y, 200 | 50 << 8 | 50 << 16);
+            x -= size >> 1;
+            y -= size >> 1;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++)
+                    render_target.set_pixel((int) x+i, (int) y+j, color);
+            }
         }
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public void clear(int color) {

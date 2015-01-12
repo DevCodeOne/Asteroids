@@ -24,6 +24,7 @@ public class Entity {
         //drawBoundingBox(graphics, offx, offy);
         float gesx = (float) (position.getX()+offx);
         float gesy = (float) (position.getY()+offy);
+        graphics.setColor(PixGraphics.BLUE);
         for (int i = 0; i < vertices.length; i++)  {
             int next = (i + 1) % vertices.length;
             graphics.draw_line(vertices[i].getX()+gesx, vertices[i].getY()+gesy, vertices[next].getX()+gesx, vertices[next].getY()+gesy);
