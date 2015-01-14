@@ -6,21 +6,20 @@ import DevCodeOne.Input.KeyInput;
 import DevCodeOne.Input.KeyboardHandler;
 import DevCodeOne.Mathematics.Vector2f;
 
-import javax.imageio.ImageIO;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
+import java.security.Key;
 
 public class Game implements DrawInterface, Tick, KeyInput {
 
     private Display display;
     private GameClock clock;
-    private Asteroid asteroids[] = new Asteroid[1];
+    private Asteroid asteroids[] = new Asteroid[15];
     private Player player;
     private Map map;
     private KeyboardHandler handler;
     private int asteroids_count;
     private int timer = 10;
+    private boolean shot;
 
     public Game(int width, int height, int resx, int resy) {
         map = new Map(resx, resy);
@@ -56,13 +55,14 @@ public class Game implements DrawInterface, Tick, KeyInput {
         graphics.clear(0);
         map.draw(graphics);
         float life = player.getLife() / 10;
+        graphics.setColor(PixGraphics.BLUE);
         for (int i = 0; i <= life; i++) {
             graphics.dot_norm(i * 12, 20, 10);
         }
         if (asteroids_count == 0) {
             timer--;
             if (timer == 0) {
-                Particle particles[] = new Particle[512];
+                Particle particles[] = new Particle[1024];
                 float it = (float) Math.PI * 2 / particles.length;
                 float val = 0;
                 float posx = (float) (Math.random() * map.getWidth());
@@ -72,22 +72,23 @@ public class Game implements DrawInterface, Tick, KeyInput {
                     int l = (int) (Math.random() * 50) + 25;
                     particles[i] = new Particle(new Vector2f(posx, posy), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), l);
                     val += it;
-                    timer = 10;
+                    timer = 40;
                 }
                 map.addParticles(particles);
             }
         }
+        //graphics.dot(map.getWidth() / 2, map.getHeight() / 2, 1);
     }
 
     @Override
     public void handleKeys(boolean[] keys) {
         if (keys[KeyEvent.VK_W]) {
-            player.incVelocityBy(player.getDirection().getX()*0.125f, 0);
-            player.incVelocityBy(0, player.getDirection().getY()*0.125f);
+            player.incVelocityBy(player.getDirection().getX()*0.5f, 0);
+            player.incVelocityBy(0, player.getDirection().getY()*0.5f);
         }
         if (keys[KeyEvent.VK_S]) {
-            player.incVelocityBy(-player.getDirection().getX()*0.125f, 0);
-            player.incVelocityBy(0, -player.getDirection().getY()*0.125f);
+            player.incVelocityBy(-player.getDirection().getX()*0.5f, 0);
+            player.incVelocityBy(0, -player.getDirection().getY()*0.5f);
         }
 
         if (keys[KeyEvent.VK_D]) {
@@ -98,10 +99,16 @@ public class Game implements DrawInterface, Tick, KeyInput {
             player.rotate(-0.05f);
         }
 
-        if (keys[KeyEvent.VK_SPACE]) {
+        if (keys[KeyEvent.VK_SPACE] && !shot) {
             Bullet bullet = new Bullet(2, new Vector2f(player.getVector(0)), player.getDirection(), 1337);
             map.add(bullet);
-            keys[KeyEvent.VK_SPACE] = false;
+            shot = true;
+        } else if (!keys[KeyEvent.VK_SPACE]) {
+            shot = false;
+        }
+
+        if (keys[KeyEvent.VK_ESCAPE]) {
+            System.exit(0);
         }
     }
 }

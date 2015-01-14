@@ -11,7 +11,7 @@ public class Entity {
     protected Vector2f min;
     protected Vector2f max;
     protected int id;
-    protected float MAX_VELOCITY = 5;
+    protected float MAX_VELOCITY = 20;
     protected boolean dead;
 
     public Entity(Vector2f vertices[], Vector2f position, int id) {

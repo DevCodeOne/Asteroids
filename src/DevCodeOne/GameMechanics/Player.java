@@ -31,7 +31,8 @@ public class Player extends Entity {
     public void incVelocityBy(float x, float y) {
         velocity.add(x, y);
         if (velocity.len() > MAX_VELOCITY) {
-            velocity.sub(x, y);
+            velocity.norm();
+            velocity.mult(MAX_VELOCITY);
         }
     }
 

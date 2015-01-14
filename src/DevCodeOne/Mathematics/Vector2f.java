@@ -45,7 +45,7 @@ public class Vector2f {
 
     public void mult(float x) {
         this.x *= x;
-        this.y *= y;
+        this.y *= x;
     }
 
     public void div(float x) {
