@@ -15,15 +15,14 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     private Display display;
     private GameClock clock;
-    private Asteroid asteroids[] = new Asteroid[10];
+    private Asteroid asteroids[] = new Asteroid[1];
     private Player player;
     private Map map;
     private KeyboardHandler handler;
-    private int resx, resy;
+    private int asteroids_count;
+    private int timer = 10;
 
     public Game(int width, int height, int resx, int resy) {
-        this.resx = resx;
-        this.resy = resy;
         map = new Map(resx, resy);
         for (int i = 0; i < asteroids.length; i++) {
             float rand = (float) (Math.random() * Math.PI * 2);
@@ -43,9 +42,13 @@ public class Game implements DrawInterface, Tick, KeyInput {
     }
 
     public void tick() {
-        for (int i = 0; i < asteroids.length; i++) {
-            float rand = (float)Math.random() * 0.025f;
-            asteroids[i].rotate(rand);
+        asteroids_count = 0;
+        for (Entity entity : map.getEntities()) {
+            if (entity instanceof Asteroid) {
+                float rand = (float)Math.random() * 0.025f;
+                ((Asteroid)(entity)).rotate(rand);
+                asteroids_count++;
+            }
         }
     }
 
@@ -55,6 +58,24 @@ public class Game implements DrawInterface, Tick, KeyInput {
         float life = player.getLife() / 10;
         for (int i = 0; i <= life; i++) {
             graphics.dot_norm(i * 12, 20, 10);
+        }
+        if (asteroids_count == 0) {
+            timer--;
+            if (timer == 0) {
+                Particle particles[] = new Particle[512];
+                float it = (float) Math.PI * 2 / particles.length;
+                float val = 0;
+                float posx = (float) (Math.random() * map.getWidth());
+                float posy = (float) (Math.random() * map.getHeight());
+                for (int i = 0; i < particles.length; i++) {
+                    float vel = (float) (Math.random() * 2.5f) + 1.25f;
+                    int l = (int) (Math.random() * 50) + 25;
+                    particles[i] = new Particle(new Vector2f(posx, posy), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), l);
+                    val += it;
+                    timer = 10;
+                }
+                map.addParticles(particles);
+            }
         }
     }
 

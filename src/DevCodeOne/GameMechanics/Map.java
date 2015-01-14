@@ -82,4 +82,10 @@ public class Map implements Tick {
             }
         }
     }
+
+    public ArrayList<Entity> getEntities() { return entities; }
+
+    public int getWidth() { return width; }
+
+    public int getHeight() { return height; }
 }

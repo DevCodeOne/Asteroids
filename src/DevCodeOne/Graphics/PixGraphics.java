@@ -65,8 +65,7 @@ public class PixGraphics {
                 for (int j = 0; j < size; j++) {
                     int upixel = render_target.get_pixel((int) x + i + 1, (int) y + j);
                     int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
-                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
-                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.25f, newpixel, upixel));
                 }
             }
 
@@ -74,8 +73,7 @@ public class PixGraphics {
                 for (int j = 0; j < size; j++) {
                     int upixel = render_target.get_pixel((int) x + i - 1, (int) y + j);
                     int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
-                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
-                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.25f, newpixel, upixel));
                 }
             }
 
@@ -83,8 +81,7 @@ public class PixGraphics {
                 for (int j = 0; j >= -blur_size; j--) {
                     int upixel = render_target.get_pixel((int) x + i, (int) y + j + 1);
                     int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
-                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
-                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.25f, newpixel, upixel));
                 }
             }
 
@@ -92,8 +89,7 @@ public class PixGraphics {
                 for (int j = size; j < size+blur_size; j++) {
                     int upixel = render_target.get_pixel((int) x + i, (int) y + j - 1);
                     int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
-                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
-                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.25f, newpixel, upixel));
                 }
             }
         }
