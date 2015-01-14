@@ -36,11 +36,11 @@ public class Asteroid extends Entity {
         asteroids[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), 1337);
         asteroids[0].setVelocityTo(-getVelocity().getY(), getVelocity().getX());
         asteroids[1].setVelocityTo(getVelocity().getY(), -getVelocity().getX());
-        Particle particles[] = new Particle[256];
+        Particle particles[] = new Particle[512];
         float it = (float) Math.PI * 2 / particles.length;
         float val = 0;
         for (int i = 0; i < particles.length; i++) {
-            float vel = (float) (Math.random() * 1.25f) + 2.5f;
+            float vel = (float) (Math.random() * 2.5f) + 1.25f;
             int life = (int) (Math.random() * 50) + 25;
             particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life);
             val += it;
