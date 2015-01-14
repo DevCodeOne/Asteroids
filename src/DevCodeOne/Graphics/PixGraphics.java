@@ -28,7 +28,7 @@ public class PixGraphics {
             float yy3 = y;
             float xx4 = x;
             float yy4 = y;
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 int upixel3 = render_target.get_pixel((int) (xx3), (int) (yy3));
                 int upixel4 = render_target.get_pixel((int) (xx4), (int) (yy4));
 
@@ -49,11 +49,62 @@ public class PixGraphics {
     }
 
     public void dot(float x, float y, int size) {
-        if (x > 0 && x < render_target.get_width() && y > 0 && y < render_target.get_height()) {
+        if (x > 1 && x < render_target.get_width()-1 && y > 1 && y < render_target.get_height()-1) {
+
             x -= size >> 1;
             y -= size >> 1;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++)
+
+            int blur_size = size*2;
+
+            for (int i = 0; i <= size; i++) {
+                for (int j = 0; j <= size; j++)
+                    render_target.set_pixel((int) x+i, (int) y+j, color);
+            }
+
+            for (int i = 0; i >= -blur_size; i--) {
+                for (int j = 0; j < size; j++) {
+                    int upixel = render_target.get_pixel((int) x + i + 1, (int) y + j);
+                    int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
+                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                }
+            }
+
+            for (int i = size; i < blur_size+size; i++) {
+                for (int j = 0; j < size; j++) {
+                    int upixel = render_target.get_pixel((int) x + i - 1, (int) y + j);
+                    int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
+                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                }
+            }
+
+            for (int i = -blur_size; i < size+blur_size; i++) {
+                for (int j = 0; j >= -blur_size; j--) {
+                    int upixel = render_target.get_pixel((int) x + i, (int) y + j + 1);
+                    int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
+                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                }
+            }
+
+            for (int i = -blur_size; i < size+blur_size; i++) {
+                for (int j = size; j < size+blur_size; j++) {
+                    int upixel = render_target.get_pixel((int) x + i, (int) y + j - 1);
+                    int newpixel = render_target.get_pixel((int) x + i, (int) y + j);
+                    render_target.set_pixel((int) x + i, (int) y + j, mix(0.3f, newpixel, upixel));
+                    //render_target.set_pixel((int) x + i, (int) y + j, 255 << 16);
+                }
+            }
+        }
+    }
+
+    public void dot_norm(float x, float y, int size) {
+        if (x > 1 && x < render_target.get_width()-1 && y > 1 && y < render_target.get_height()-1) {
+            x -= size >> 1;
+            y -= size >> 1;
+            for (int i = 0; i <= size; i++) {
+                for (int j = 0; j <= size; j++)
                     render_target.set_pixel((int) x+i, (int) y+j, color);
             }
         }

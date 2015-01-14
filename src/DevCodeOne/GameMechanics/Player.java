@@ -6,11 +6,13 @@ import DevCodeOne.Mathematics.Vector2f;
 public class Player extends Entity {
 
     private Vector2f direction = new Vector2f(0, -1);
+    private float life;
 
-    public Player(Vector2f[] vertices, Vector2f position, int id, String name) {
+    public Player(Vector2f[] vertices, Vector2f position, int id, String name, float life) {
         super(vertices, position, id);
         createBoundingBox();
         setMaxVelocity(2.5f);
+        this.life = life;
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {
@@ -38,6 +40,29 @@ public class Player extends Entity {
         if (new_velocity.len() < MAX_VELOCITY)
             velocity.set(x, y);
     }
+
+    @Override
+    public Entity[] collideEvent(Entity entity, Map map) {
+        if (entity instanceof Asteroid) {
+            life -= 10;
+        }
+        if (life <= 0) {
+            Particle particles[] = new Particle[512];
+            float it = (float) Math.PI * 2 / particles.length;
+            float val = 0;
+            for (int i = 0; i < particles.length; i++) {
+                float vel = (float) (Math.random() * 2.5f) + 1.25f;
+                int life = (int) (Math.random() * 50) + 25;
+                particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life);
+                val += it;
+            }
+            map.addParticles(particles);
+            destroy();
+        }
+        return null;
+    }
+
+    public float getLife() { return life; }
 
     public Vector2f getDirection() { return direction; }
 }

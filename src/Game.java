@@ -6,8 +6,10 @@ import DevCodeOne.Input.KeyInput;
 import DevCodeOne.Input.KeyboardHandler;
 import DevCodeOne.Mathematics.Vector2f;
 
+import javax.imageio.ImageIO;
 import java.awt.event.KeyEvent;
-import java.security.Key;
+import java.io.File;
+import java.io.IOException;
 
 public class Game implements DrawInterface, Tick, KeyInput {
 
@@ -17,8 +19,11 @@ public class Game implements DrawInterface, Tick, KeyInput {
     private Player player;
     private Map map;
     private KeyboardHandler handler;
+    private int resx, resy;
 
     public Game(int width, int height, int resx, int resy) {
+        this.resx = resx;
+        this.resy = resy;
         map = new Map(resx, resy);
         for (int i = 0; i < asteroids.length; i++) {
             float rand = (float) (Math.random() * Math.PI * 2);
@@ -26,7 +31,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
             asteroids[i].setVelocityTo((float)Math.sin(rand), (float)Math.cos(rand));
             map.add(asteroids[i]);
         }
-        player = new Player(new Vector2f[]{new Vector2f(0, -10), new Vector2f(-7.5f, 10), new Vector2f(0, 5), new Vector2f(7.5f, 10)}, new Vector2f(resx/2- 100, resy/2 - 100), 1337, "Player");
+        player = new Player(new Vector2f[]{new Vector2f(0, -10), new Vector2f(-7.5f, 10), new Vector2f(0, 5), new Vector2f(7.5f, 10)}, new Vector2f(resx/2- 100, resy/2 - 100), 1337, "Player", 50);
         map.add(player);
         clock = new GameClock(256, 12);
         display = new Display(width, height, resx, resy, this);
@@ -47,6 +52,10 @@ public class Game implements DrawInterface, Tick, KeyInput {
     public void draw(PixGraphics graphics) {
         graphics.clear(0);
         map.draw(graphics);
+        float life = player.getLife() / 10;
+        for (int i = 0; i <= life; i++) {
+            graphics.dot_norm(i * 12, 20, 10);
+        }
     }
 
     @Override

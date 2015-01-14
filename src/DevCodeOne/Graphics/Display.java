@@ -44,4 +44,8 @@ public class Display extends Canvas implements Tick {
         drawInterface.draw(pixGraphics);
         this.strategy.getDrawGraphics().drawImage(offscreen, 0, 0, getWidth(), getHeight(), null);
     }
+
+    public BufferedImage getBuffer() {
+        return offscreen;
+    }
 }
