@@ -16,9 +16,9 @@ public class Particle {
         this.position = position;
         this.direction = direction;
         this.color = PixGraphics.BLUE;
-        this.mr = (int) (((((PixGraphics.BLUE >> 16)) & 0xFF) / (life)));
-        this.mg = (int) (((((PixGraphics.BLUE >> 8)) & 0xFF) / (life)));
-        this.mb = (int) (((((PixGraphics.BLUE)) & 0xFF) / (life)));
+        this.mr = (((((color >> 16)) & 0xFF) / life));
+        this.mg = (((((color >> 8)) & 0xFF) / life));
+        this.mb = ((((color) & 0xFF) / life));
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {

@@ -13,7 +13,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     private Display display;
     private GameClock clock;
-    private Asteroid asteroids[] = new Asteroid[15];
+    private Asteroid asteroids[] = new Asteroid[0];
     private Player player;
     private Map map;
     private KeyboardHandler handler;
@@ -53,7 +53,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     public void draw(PixGraphics graphics) {
         graphics.clear(0);
-        map.draw(graphics);
+        /*map.draw(graphics);
         float life = player.getLife() / 10;
         graphics.setColor(PixGraphics.BLUE);
         for (int i = 0; i <= life; i++) {
@@ -68,27 +68,31 @@ public class Game implements DrawInterface, Tick, KeyInput {
                 float posx = (float) (Math.random() * map.getWidth());
                 float posy = (float) (Math.random() * map.getHeight());
                 for (int i = 0; i < particles.length; i++) {
-                    float vel = (float) (Math.random() * 2.5f) + 1.25f;
-                    int l = (int) (Math.random() * 50) + 25;
+                    float vel = (float) (Math.random() * .5f) + .25f;
+                    int l = (int) (Math.random() * 200) + 25;
                     particles[i] = new Particle(new Vector2f(posx, posy), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), l);
                     val += it;
-                    timer = 40;
+                    timer = 400;
                 }
                 map.addParticles(particles);
             }
-        }
+        }*/
         //graphics.dot(map.getWidth() / 2, map.getHeight() / 2, 1);
+        char c = 65;
+        for (int i = 0; i < 26; i++) {
+            graphics.drawChar(c++, 200+i*45, 200, 10);
+        }
     }
 
     @Override
     public void handleKeys(boolean[] keys) {
         if (keys[KeyEvent.VK_W]) {
-            player.incVelocityBy(player.getDirection().getX()*0.5f, 0);
-            player.incVelocityBy(0, player.getDirection().getY()*0.5f);
+            player.incVelocityBy(player.getDirection().getX()*0.25f, 0);
+            player.incVelocityBy(0, player.getDirection().getY()*0.25f);
         }
         if (keys[KeyEvent.VK_S]) {
-            player.incVelocityBy(-player.getDirection().getX()*0.5f, 0);
-            player.incVelocityBy(0, -player.getDirection().getY()*0.5f);
+            player.incVelocityBy(-player.getDirection().getX()*0.25f, 0);
+            player.incVelocityBy(0, -player.getDirection().getY()*0.25f);
         }
 
         if (keys[KeyEvent.VK_D]) {

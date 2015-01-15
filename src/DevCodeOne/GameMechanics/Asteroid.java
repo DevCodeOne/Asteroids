@@ -40,7 +40,7 @@ public class Asteroid extends Entity {
         float it = (float) Math.PI * 2 / particles.length;
         float val = 0;
         for (int i = 0; i < particles.length; i++) {
-            float vel = (float) (Math.random() * 2.5f) + 1.25f;
+            float vel = (float) (Math.random() * 5.0f) + 2.5f;
             int life = (int) (Math.random() * 50) + 25;
             particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life);
             val += it;

@@ -11,7 +11,7 @@ public class Player extends Entity {
     public Player(Vector2f[] vertices, Vector2f position, int id, String name, float life) {
         super(vertices, position, id);
         createBoundingBox();
-        setMaxVelocity(2.5f);
+        setMaxVelocity(3.5f);
         this.life = life;
     }
 
@@ -31,8 +31,7 @@ public class Player extends Entity {
     public void incVelocityBy(float x, float y) {
         velocity.add(x, y);
         if (velocity.len() > MAX_VELOCITY) {
-            velocity.norm();
-            velocity.mult(MAX_VELOCITY);
+            velocity.sub(x, y);
         }
     }
 

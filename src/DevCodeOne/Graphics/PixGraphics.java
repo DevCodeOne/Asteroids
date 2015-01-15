@@ -5,6 +5,7 @@ public class PixGraphics {
     private Pixmap render_target;
     private int color = 255;
     public static final int BLUE = 200 | 50 << 8 | 50 << 16;
+    public static final int RED = 200 << 16;
 
     public PixGraphics(Pixmap pixmap) {
         this.render_target = pixmap;
@@ -54,7 +55,7 @@ public class PixGraphics {
             x -= size >> 1;
             y -= size >> 1;
 
-            int blur_size = (int)(size*1.5f + 0.5f);
+            int blur_size = (int)(size*2.0f + 0.5f);
             float factor = 0.35f;
 
             for (int i = 0; i <= size; i++) {
@@ -129,5 +130,15 @@ public class PixGraphics {
         int gd = (int)((g - g2) * mix);
         int bd = (int)((b - b2) * mix);
         return (r2 + rd) << 16 | (g2 + gd) << 8 | (b2 + bd);
+    }
+
+    public void drawChar(char c, int posx, int posy, int size) {
+        c = Character.toUpperCase(c);
+        for (int i = 0; i < Font.font[0].length; i++) {
+            for (int j = 0; j < Font.font[0][0].length; j++) {
+                if (Font.font[c-65][i][j] == 1)
+                    dot_norm(posx + j * size, posy + i * size, size);
+            }
+        }
     }
 }
