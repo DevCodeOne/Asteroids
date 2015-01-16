@@ -21,6 +21,7 @@ public class Map implements Tick {
         this.width = width;
         this.height = height;
         this.particleList = new ParticleList();
+        this.asteroidsCount = -1;
     }
 
     public void draw(PixGraphics graphics) {

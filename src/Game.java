@@ -3,6 +3,7 @@ import DevCodeOne.Graphics.*;
 import DevCodeOne.Input.KeyInput;
 import DevCodeOne.Input.KeyboardHandler;
 import DevCodeOne.Mathematics.Vector2f;
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import java.awt.event.KeyEvent;
 
@@ -17,8 +18,9 @@ public class Game implements DrawInterface, Tick, KeyInput {
     private int timer = 10;
     private boolean shot;
     private int resx, resy;
-    private Menu menu;
+    private Menu menu, endingMenu;
     private boolean init;
+    private boolean ending;
 
     public Game(int width, int height, int resx, int resy) {
         this.resx = resx;
@@ -27,6 +29,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
         display = new Display(width, height, resx, resy, this);
         handler = new KeyboardHandler(this, clock, display);
         menu = new Menu(new String[]{"Easy", "Normal", "Difficult"}, 10, 100, 100);
+        endingMenu = new Menu(new String[]{"Play Again"}, 10, 100, 100);
         display.addComponent(menu);
         clock.add(display);
         clock.start_clock();
@@ -55,12 +58,14 @@ public class Game implements DrawInterface, Tick, KeyInput {
             if (player.isDead()) {
                 init = false;
                 display.addComponent(menu);
+            } else if (map.getAsteroidsCount() == 0 && !ending) {
+                display.addComponent(endingMenu);
+                ending = true;
             }
         }
     }
 
     public void draw(PixGraphics graphics) {
-        graphics.clear(0);
         if (init) {
             map.draw(graphics);
             float life = player.getLife() / 10;
@@ -82,7 +87,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
                         int l = (int) (Math.random() * 200) + 25;
                         particles[i] = new Particle(new Vector2f(posx, posy), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), l, color);
                         val += it;
-                        timer = 400;
+                        timer = 200;
                     }
                     map.addParticles(particles);
                 }
@@ -94,7 +99,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     @Override
     public void handleKeys(boolean[] keys) {
-        if (init) {
+        if (init && !ending) {
             if (keys[KeyEvent.VK_W]) {
                 player.incVelocityBy(player.getDirection().getX() * 0.25f, 0);
                 player.incVelocityBy(0, player.getDirection().getY() * 0.25f);
@@ -123,6 +128,27 @@ public class Game implements DrawInterface, Tick, KeyInput {
             if (keys[KeyEvent.VK_ESCAPE]) {
                 System.exit(0);
             }
+        } else if (!ending) {
+            if (keys[KeyEvent.VK_DOWN]) {
+                menu.select(menu.getIndex() + 1);
+                keys[KeyEvent.VK_DOWN] = false;
+            } else if (keys[KeyEvent.VK_UP]) {
+                menu.select(menu.getIndex() - 1);
+                keys[KeyEvent.VK_UP] = false;
+            }
+            if (keys[KeyEvent.VK_ENTER]) {
+                keys[KeyEvent.VK_ENTER] = false;
+                int numberAsteroids = 0;
+                if (menu.getSelectedItem().equals("Easy")) {
+                    numberAsteroids = 1;
+                } else if (menu.getSelectedItem().equals("Normal")) {
+                    numberAsteroids = 15;
+                } else  {
+                    numberAsteroids = 20;
+                }
+                display.removeComponent(menu);
+                initGame(numberAsteroids);
+            }
         } else {
             if (keys[KeyEvent.VK_DOWN]) {
                 menu.select(menu.getIndex() + 1);
@@ -132,16 +158,12 @@ public class Game implements DrawInterface, Tick, KeyInput {
                 keys[KeyEvent.VK_UP] = false;
             }
             if (keys[KeyEvent.VK_ENTER]) {
-                int numberAsteroids = 0;
-                if (menu.getSelectedItem().equals("Easy")) {
-                    numberAsteroids = 10;
-                } else if (menu.getSelectedItem().equals("Normal")) {
-                    numberAsteroids = 15;
-                } else  {
-                    numberAsteroids = 20;
+                keys[KeyEvent.VK_ENTER] = false;
+                if (endingMenu.getSelectedItem().equals("Play Again")) {
+                    display.removeComponent(endingMenu);
+                    ending = false;
+                    player.destroy();
                 }
-                display.removeComponent(menu);
-                initGame(numberAsteroids);
             }
         }
     }

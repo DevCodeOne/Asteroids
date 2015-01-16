@@ -24,7 +24,7 @@ public class KeyboardHandler implements KeyListener, Tick {
 
     @Override
     public void keyTyped(KeyEvent keyEvent) {
-        keys[keyEvent.getKeyCode()] = true;
+        /*keys[keyEvent.getKeyCode()] = true;*/
     }
 
     @Override

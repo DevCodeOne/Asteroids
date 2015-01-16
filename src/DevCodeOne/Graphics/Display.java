@@ -45,6 +45,7 @@ public class Display extends Canvas implements Tick {
     public void tick() {
         if (this.strategy.contentsLost())
             return;
+        pixGraphics.clear(0);
         drawInterface.draw(pixGraphics);
         for (Component component : components) {
             component.draw(pixGraphics);
