@@ -13,7 +13,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     private Display display;
     private GameClock clock;
-    private Asteroid asteroids[] = new Asteroid[0];
+    private Asteroid asteroids[] = new Asteroid[15];
     private Player player;
     private Map map;
     private KeyboardHandler handler;
@@ -53,7 +53,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
 
     public void draw(PixGraphics graphics) {
         graphics.clear(0);
-        /*map.draw(graphics);
+        map.draw(graphics);
         float life = player.getLife() / 10;
         graphics.setColor(PixGraphics.BLUE);
         for (int i = 0; i <= life; i++) {
@@ -76,12 +76,9 @@ public class Game implements DrawInterface, Tick, KeyInput {
                 }
                 map.addParticles(particles);
             }
-        }*/
-        //graphics.dot(map.getWidth() / 2, map.getHeight() / 2, 1);
-        char c = 65;
-        for (int i = 0; i < 26; i++) {
-            graphics.drawChar(c++, 200+i*45, 200, 10);
         }
+        //graphics.dot(map.getWidth() / 2, map.getHeight() / 2, 1);
+        graphics.drawString("Hello World", 100, 100, 5);
     }
 
     @Override
