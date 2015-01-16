@@ -12,6 +12,7 @@ public class Map implements Tick {
     private Vector2f offset;
     private Physics physics;
     private int width, height;
+    private int asteroidsCount;
 
     public Map(int width, int height) {
         this.entities = new ArrayList<Entity>();
@@ -51,6 +52,14 @@ public class Map implements Tick {
         resetPositions();
         physics.doPhysics(entities, this);
         particleList.iterate();
+        asteroidsCount = 0;
+        for (Entity entity : getEntities()) {
+            if (entity instanceof Asteroid) {
+                float rand = (float)Math.random() * 0.025f;
+                ((Asteroid)(entity)).rotate(rand);
+                asteroidsCount++;
+            }
+        }
     }
 
     public void resetPositions() {
@@ -88,4 +97,6 @@ public class Map implements Tick {
     public int getWidth() { return width; }
 
     public int getHeight() { return height; }
+
+    public int getAsteroidsCount() { return asteroidsCount; }
 }

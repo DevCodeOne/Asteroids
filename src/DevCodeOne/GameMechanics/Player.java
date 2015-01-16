@@ -5,19 +5,16 @@ import DevCodeOne.Mathematics.Vector2f;
 
 public class Player extends Entity {
 
-    private Vector2f direction = new Vector2f(0, -1);
-    private float life;
+    protected Vector2f direction = new Vector2f(0, -1);
+    protected float life;
+    protected int color;
 
-    public Player(Vector2f[] vertices, Vector2f position, int id, String name, float life) {
-        super(vertices, position, id);
+    public Player(Vector2f[] vertices, Vector2f position, float life, int color) {
+        super(vertices, position, color);
         createBoundingBox();
         setMaxVelocity(3.5f);
         this.life = life;
-    }
-
-    public void draw(PixGraphics graphics, int offx, int offy) {
-        //graphics.draw_line(100, 100, 100 + direction.getX() * 30, 100 + direction.getY() * 30);
-        super.draw(graphics, offx, offy);
+        this.color = color;
     }
 
     @Override
@@ -48,12 +45,13 @@ public class Player extends Entity {
         }
         if (life <= 0) {
             Particle particles[] = new Particle[512];
+            int color = ((int) (Math.random()*122) + 122) << 16 | ((int) (Math.random()*122) + 122) << 8 | ((int) (Math.random()*122) + 122);
             float it = (float) Math.PI * 2 / particles.length;
             float val = 0;
             for (int i = 0; i < particles.length; i++) {
                 float vel = (float) (Math.random() * 2.5f) + 1.25f;
                 int life = (int) (Math.random() * 50) + 25;
-                particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life);
+                particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life, color);
                 val += it;
             }
             map.addParticles(particles);

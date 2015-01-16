@@ -11,14 +11,14 @@ public class Particle {
     protected int color;
     protected int mr, mg, mb;
 
-    public Particle(Vector2f position, Vector2f direction, int life) {
+    public Particle(Vector2f position, Vector2f direction, int life, int color) {
         this.life = life;
         this.position = position;
         this.direction = direction;
-        this.color = PixGraphics.BLUE;
-        this.mr = (((((color >> 16)) & 0xFF) / life));
-        this.mg = (((((color >> 8)) & 0xFF) / life));
-        this.mb = ((((color) & 0xFF) / life));
+        this.color = color;
+        this.mr = ((((color >> 16) & 0xFF) / life));
+        this.mg = ((((color >> 8) & 0xFF) / life));
+        this.mb = (((color & 0xFF) / life));
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {

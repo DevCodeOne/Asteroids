@@ -6,8 +6,8 @@ public class Bullet extends Entity {
 
     protected float size;
 
-    public Bullet(float size, Vector2f position, Vector2f direction, int id) {
-        super(new Vector2f[]{new Vector2f(0, 0), new Vector2f(direction.getX() * 4, direction.getY() * 4)}, position, id);
+    public Bullet(float size, Vector2f position, Vector2f direction, int color) {
+        super(new Vector2f[]{new Vector2f(0, 0), new Vector2f(direction.getX() * size, direction.getY() * size)}, position, color);
         Vector2f dir = new Vector2f(direction);
         dir.norm();
         setMaxVelocity(30);

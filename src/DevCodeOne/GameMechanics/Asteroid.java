@@ -1,14 +1,16 @@
 package DevCodeOne.GameMechanics;
 
+import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
 
 public class Asteroid extends Entity {
 
     public static final int EDGES = 12;
     protected float size;
+    protected int color;
 
-    public Asteroid(float size, Vector2f position, int id) {
-        super(null, position, id);
+    public Asteroid(float size, Vector2f position, int color) {
+        super(null, position, color);
         vertices = new Vector2f[EDGES];
         float factor = (float) (2*Math.PI) / (float) EDGES;
         float change = size*1.25f;
@@ -17,6 +19,7 @@ public class Asteroid extends Entity {
             vertices[i] = new Vector2f((float) ((Math.sin(i*factor) * size) - (Math.sin(i*factor) * rand * change)), (float) ((Math.cos(i*factor) * size) - (Math.cos(i*factor) * rand * change)));
         }
         this.size = size;
+        this.color = color;
         createBoundingBox();
     }
 
@@ -32,8 +35,8 @@ public class Asteroid extends Entity {
             return null;
         }
         Entity asteroids[] = new Entity[2];
-        asteroids[0] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), 1337);
-        asteroids[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), 1337);
+        asteroids[0] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
+        asteroids[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
         asteroids[0].setVelocityTo(-getVelocity().getY(), getVelocity().getX());
         asteroids[1].setVelocityTo(getVelocity().getY(), -getVelocity().getX());
         Particle particles[] = new Particle[512];
@@ -42,7 +45,7 @@ public class Asteroid extends Entity {
         for (int i = 0; i < particles.length; i++) {
             float vel = (float) (Math.random() * 5.0f) + 2.5f;
             int life = (int) (Math.random() * 50) + 25;
-            particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life);
+            particles[i] = new Particle(new Vector2f(position), new Vector2f((float) Math.cos(val) * vel, (float) Math.sin(val) * vel), life, color);
             val += it;
         }
         map.addParticles(particles);

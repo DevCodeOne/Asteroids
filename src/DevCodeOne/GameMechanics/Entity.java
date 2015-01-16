@@ -10,24 +10,25 @@ public class Entity {
     protected Vector2f velocity;
     protected Vector2f min;
     protected Vector2f max;
-    protected int id;
+    protected int color;
     protected float MAX_VELOCITY = 20;
     protected boolean dead;
 
-    public Entity(Vector2f vertices[], Vector2f position, int id) {
+    public Entity(Vector2f vertices[], Vector2f position, int color) {
         this.vertices = vertices;
         this.position = position;
         this.velocity = new Vector2f();
+        this.color = color;
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {
         //drawBoundingBox(graphics, offx, offy);
         float gesx = (float) (position.getX()+offx);
         float gesy = (float) (position.getY()+offy);
-        graphics.setColor(PixGraphics.BLUE);
+        graphics.setColor(color);
         for (int i = 0; i < vertices.length; i++)  {
             int next = (i + 1) % vertices.length;
-            graphics.draw_line(vertices[i].getX()+gesx, vertices[i].getY()+gesy, vertices[next].getX()+gesx, vertices[next].getY()+gesy);
+            graphics.drawLine(vertices[i].getX() + gesx, vertices[i].getY() + gesy, vertices[next].getX() + gesx, vertices[next].getY() + gesy);
         }
     }
 
@@ -40,10 +41,10 @@ public class Entity {
     }
 
     public void drawBoundingBox(PixGraphics graphics, int offx, int offy) {
-        graphics.draw_line(min.getX()+offx, min.getY()+offy, max.getX()+offx, min.getY()+offy);
-        graphics.draw_line(max.getX()+offx, min.getY()+offy, max.getX()+offx, max.getY()+offy);
-        graphics.draw_line(max.getX()+offx, max.getY()+offy, min.getX()+offx, max.getY()+offy);
-        graphics.draw_line(min.getX()+offx, max.getY()+offy, min.getX()+offx, min.getY()+offy);
+        graphics.drawLine(min.getX() + offx, min.getY() + offy, max.getX() + offx, min.getY() + offy);
+        graphics.drawLine(max.getX() + offx, min.getY() + offy, max.getX() + offx, max.getY() + offy);
+        graphics.drawLine(max.getX() + offx, max.getY() + offy, min.getX() + offx, max.getY() + offy);
+        graphics.drawLine(min.getX() + offx, max.getY() + offy, min.getX() + offx, min.getY() + offy);
     }
 
     public void createBoundingBox() {
@@ -136,7 +137,7 @@ public class Entity {
 
     public Vector2f[] getVertices() { return vertices; }
 
-    public int getID() { return id; }
+    public int getColor() { return color; }
 
     public boolean isDead() { return dead; }
 }

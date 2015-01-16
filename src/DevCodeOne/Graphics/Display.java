@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Display extends Canvas implements Tick {
 
@@ -15,6 +16,7 @@ public class Display extends Canvas implements Tick {
     private Pixmap pixmap;
     private PixGraphics pixGraphics;
     private DrawInterface drawInterface;
+    private ArrayList<Component> components;
 
     public Display(int width, int height, int resx, int resy, DrawInterface drawInterface) {
 
@@ -30,6 +32,8 @@ public class Display extends Canvas implements Tick {
         this.display.setLayout(null);
         this.display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        this.components = new ArrayList<Component>();
+
         setSize(width, height);
         setLocation(0, 0);
         createBufferStrategy(1);
@@ -42,7 +46,18 @@ public class Display extends Canvas implements Tick {
         if (this.strategy.contentsLost())
             return;
         drawInterface.draw(pixGraphics);
+        for (Component component : components) {
+            component.draw(pixGraphics);
+        }
         this.strategy.getDrawGraphics().drawImage(offscreen, 0, 0, getWidth(), getHeight(), null);
+    }
+
+    public void addComponent(Component component) {
+        this.components.add(component);
+    }
+
+    public void removeComponent(Component component) {
+        this.components.remove(component);
     }
 
     public BufferedImage getBuffer() {

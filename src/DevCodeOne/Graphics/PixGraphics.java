@@ -15,7 +15,7 @@ public class PixGraphics {
         return render_target;
     }
 
-    public void draw_line(float x, float y, float x2, float y2) {
+    public void drawLine(float x, float y, float x2, float y2) {
         float dx = (x2 - x);
         float dy = (y2 - y);
         float mx, my;
@@ -133,7 +133,14 @@ public class PixGraphics {
     }
 
     public void drawChar(char c, int posx, int posy, int size) {
-        c = (char) (Character.toUpperCase(c) - 65);
+        c = (Character.toUpperCase(c));
+        int offset = 0;
+        if (c >= 65 && c <= 90) {
+            offset = 65;
+        } else if (c >= 48 && c <= 57) {
+            offset = 22;
+        }
+        c -= (char) offset;
         for (int i = 0; i < Font.font[c].length; i++) {
             for (int j = 0; j < Font.font[c][0].length; j++) {
                 if (Font.font[c][i][j] == 1)
@@ -148,12 +155,42 @@ public class PixGraphics {
         int y = posy;
         for (int i = 0; i < chars.length; i++) {
             char uc = Character.toUpperCase(chars[i]);
-            if (uc >= 65 && uc <= 65+26) {
+            if (uc >= 65 && uc <= 90) {
                 drawChar(chars[i], x, y, size);
                 x += (Font.font[Character.toUpperCase(chars[i]) - 65][0].length + 1) * size;
             } else if (uc == ' ') {
                 x+= 4 * size + 1;
+            } else if (uc >= 48 && uc <= 57) {
+                // 22
+                drawChar(chars[i], x, y, size);
+                x += (Font.font[Character.toUpperCase(chars[i]) - 22][0].length + 1) * size;
             }
         }
+    }
+
+    public int calculateStringWidth(String str, int size) {
+        int len = 0;
+        char chars[] = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char uc = Character.toUpperCase(chars[i]);
+            if (uc >= 65 && uc <= 65+26) {
+                len += (Font.font[Character.toUpperCase(chars[i]) - 65][0].length + 1) * size;
+            } else if (uc == ' ') {
+                len+= 4 * size + 1;
+            }
+        }
+        return len;
+    }
+
+    public int calculateStringHeight(String str, int size) {
+        int len = 0;
+        char chars[] = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char uc = Character.toUpperCase(chars[i]);
+            if (uc >= 65 && uc <= 65+26) {
+                len = Math.max((Font.font[Character.toUpperCase(chars[i]) - 65][0].length + 1) * size, len);
+            }
+        }
+        return len;
     }
 }

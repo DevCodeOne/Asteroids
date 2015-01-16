@@ -20,23 +20,27 @@ public class GameClock implements Runnable {
 
     public void run() {
         while (!interrupted) {
-            try {
-                long time = System.currentTimeMillis();
-                for (Tick tick : ticks) {
-                    if (tick != null)
-                        tick.tick();
+            synchronized (this) {
+                try {
+                    long time = System.currentTimeMillis();
+                    for (Tick tick : ticks) {
+                        if (tick != null)
+                            tick.tick();
+                    }
+                    time = System.currentTimeMillis() - time;
+                    Thread.sleep(sleep_time < time ? 0 : sleep_time - time);
+                } catch (Exception e) {
+                    System.out.println("Error @ GameClock");
+                    e.printStackTrace();
                 }
-                time = System.currentTimeMillis() - time;
-                Thread.sleep(sleep_time < time ? 0 : sleep_time - time);
-            } catch (Exception e) {
-                System.out.println("Error @ GameClock");
-                e.printStackTrace();
             }
         }
     }
 
     public void add(Tick tick) {
-        ticks[tick_index++] = tick;
+        synchronized (this) {
+            ticks[tick_index++] = tick;
+        }
     }
 
     public void interrupt() {
