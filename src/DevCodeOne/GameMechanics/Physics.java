@@ -13,7 +13,7 @@ public class Physics {
         }
         for (int i = 0; i < entities.size(); i++) {
             for (int j = 0; j < entities.size(); j++) {
-                if (entities.get(i) != entities.get(j) && !(entities.get(i) instanceof Asteroid && entities.get(j) instanceof Asteroid)) {
+                if (entities.get(i) != entities.get(j)) {
                     if (Collider.collides(entities.get(i), entities.get(j))) {
                         Entity spawnarr[] = entities.get(i).collideEvent(entities.get(j), map);
                         if (spawnarr != null) {

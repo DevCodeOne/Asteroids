@@ -29,7 +29,7 @@ public class Particle {
         float gesx = (position.getX() + offx);
         float gesy = (position.getY() + offy);
         graphics.setColor(color);
-        graphics.dot(gesx, gesy, 2);
+        graphics.dot(gesx, gesy, 3);
     }
 
     public void changePosByVelocity() {

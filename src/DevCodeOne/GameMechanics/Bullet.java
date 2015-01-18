@@ -17,7 +17,8 @@ public class Bullet extends Entity {
 
     @Override
     public Entity[] collideEvent(Entity entity, Map map) {
-        destroy();
+        if (entity instanceof Asteroid)
+            destroy();
         return null;
     }
 }

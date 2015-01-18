@@ -3,7 +3,6 @@ import DevCodeOne.Graphics.*;
 import DevCodeOne.Input.KeyInput;
 import DevCodeOne.Input.KeyboardHandler;
 import DevCodeOne.Mathematics.Vector2f;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import java.awt.event.KeyEvent;
 
@@ -101,12 +100,12 @@ public class Game implements DrawInterface, Tick, KeyInput {
     public void handleKeys(boolean[] keys) {
         if (init && !ending) {
             if (keys[KeyEvent.VK_W]) {
-                player.incVelocityBy(player.getDirection().getX() * 0.25f, 0);
-                player.incVelocityBy(0, player.getDirection().getY() * 0.25f);
+                player.incVelocityBy(player.getOrientation().getX() * 0.25f, 0);
+                player.incVelocityBy(0, player.getOrientation().getY() * 0.25f);
             }
             if (keys[KeyEvent.VK_S]) {
-                player.incVelocityBy(-player.getDirection().getX() * 0.25f, 0);
-                player.incVelocityBy(0, -player.getDirection().getY() * 0.25f);
+                player.incVelocityBy(-player.getOrientation().getX() * 0.25f, 0);
+                player.incVelocityBy(0, -player.getOrientation().getY() * 0.25f);
             }
 
             if (keys[KeyEvent.VK_D]) {
@@ -118,7 +117,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
             }
 
             if (keys[KeyEvent.VK_SPACE] && !shot) {
-                Bullet bullet = new Bullet(2, new Vector2f(player.getVector(0)), player.getDirection(), player.getColor());
+                Bullet bullet = new Bullet(2, new Vector2f(player.getVector(0)), player.getOrientation(), player.getColor());
                 map.add(bullet);
                 shot = true;
             } else if (!keys[KeyEvent.VK_SPACE]) {

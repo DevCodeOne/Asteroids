@@ -55,7 +55,7 @@ public class PixGraphics {
             x -= size >> 1;
             y -= size >> 1;
 
-            int blur_size = (int)(size*2.0f + 0.5f);
+            int blur_size = (int)(size*1.5f);
             float factor = 0.35f;
 
             for (int i = 0; i <= size; i++) {

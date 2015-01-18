@@ -19,6 +19,9 @@ public class Entity {
         this.position = position;
         this.velocity = new Vector2f();
         this.color = color;
+        if (this.vertices != null) {
+            this.createBoundingBox();
+        }
     }
 
     public void draw(PixGraphics graphics, int offx, int offy) {

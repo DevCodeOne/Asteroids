@@ -30,15 +30,32 @@ public class Asteroid extends Entity {
 
     @Override
     public Entity[] collideEvent(Entity entity, Map map) {
+        if (entity instanceof Asteroid || (entity instanceof Item && !((Item)(entity)).isAttached)) {
+            return null;
+        }
         if (getSize() <= 12.5f) {
             destroy();
             return null;
         }
-        Entity asteroids[] = new Entity[2];
-        asteroids[0] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
-        asteroids[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
-        asteroids[0].setVelocityTo(-getVelocity().getY(), getVelocity().getX());
-        asteroids[1].setVelocityTo(getVelocity().getY(), -getVelocity().getX());
+        float ran = (float) Math.random();
+        boolean item = false;
+        if (ran > 0.7f)
+            item = true;
+        Entity entities[] = new Entity[!item ? 2 : 3];
+        entities[0] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
+        entities[1] = new Asteroid(getSize() / 2, new Vector2f(getPosition()), color);
+        entities[0].setVelocityTo(-getVelocity().getY(), getVelocity().getX());
+        entities[1].setVelocityTo(getVelocity().getY(), -getVelocity().getX());
+        if (item) {
+            Vector2f vertices[] = new Vector2f[36];
+            float rad = 0;
+            float step = (float) (2 * Math.PI / 36.0f);
+            for (int i = 0; i < 36; i++) {
+                vertices[i] = new Vector2f((float) Math.cos(rad) * getSize(), (float) Math.sin(rad) * getSize());
+                rad += step;
+            }
+            entities[2] = new Item(vertices, getPosition(), getColor());
+        }
         Particle particles[] = new Particle[512];
         float it = (float) Math.PI * 2 / particles.length;
         float val = 0;
@@ -50,7 +67,9 @@ public class Asteroid extends Entity {
         }
         map.addParticles(particles);
         destroy();
-        return asteroids;
+        if (entity instanceof Item)
+            return null;
+        return entities;
     }
 
     public float getSize() { return size; }

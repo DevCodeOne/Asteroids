@@ -1,13 +1,14 @@
 package DevCodeOne.GameMechanics;
 
-import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
+
+import java.util.ArrayList;
 
 public class Player extends Entity {
 
-    protected Vector2f direction = new Vector2f(0, -1);
+    protected Vector2f orientation = new Vector2f(0, -1);
     protected float life;
-    protected int color;
+    protected ArrayList<Item> items = new ArrayList<Item>();
 
     public Player(Vector2f[] vertices, Vector2f position, float life, int color) {
         super(vertices, position, color);
@@ -21,21 +22,31 @@ public class Player extends Entity {
     public void rotate(float rot) {
         float cos = (float) Math.cos(rot);
         float sin = (float) Math.sin(rot);
-        direction.set(direction.getX() * cos - direction.getY() * sin, direction.getY() * cos + direction.getX() * sin);
+        orientation.set(orientation.getX() * cos - orientation.getY() * sin, orientation.getY() * cos + orientation.getX() * sin);
         super.rotate(rot);
-    }
-
-    public void incVelocityBy(float x, float y) {
-        velocity.add(x, y);
-        if (velocity.len() > MAX_VELOCITY) {
-            velocity.sub(x, y);
+        if (hasItems()) {
+            for (Item item : items) {
+                item.rotate(rot);
+            }
         }
     }
 
-    public void setVelocityTo(float x, float y) {
-        Vector2f new_velocity = new Vector2f(x, y);
-        if (new_velocity.len() < MAX_VELOCITY)
-            velocity.set(x, y);
+    public void setPosTo(float x, float y) {
+        super.setPosTo(x, y);
+        if (hasItems()) {
+            for (Item item : items) {
+                item.setPosTo(x, y);
+            }
+        }
+    }
+
+    public void changePosBy(float x, float y) {
+        super.changePosBy(x, y);
+        if (hasItems()) {
+            for (Item item : items) {
+                item.changePosBy(x, y);
+            }
+        }
     }
 
     @Override
@@ -60,7 +71,27 @@ public class Player extends Entity {
         return null;
     }
 
+    public void shoot(Map map) {
+        if (!hasItems()) {
+            Bullet bullet = new Bullet(2, new Vector2f(getVector(0)), getOrientation(), getColor());
+            map.add(bullet);
+        } else {
+            for (Item item : items) {
+                item.shoot(this, map);
+            }
+        }
+    }
+
+    public void addItem(Item item) {
+        if (items.indexOf(item) != -1)
+            return;
+        items.add(item);
+        item.setPosTo(getPosition().getX(), getPosition().getY());
+    }
+
+    public boolean hasItems() { return items.size() > 0; }
+
     public float getLife() { return life; }
 
-    public Vector2f getDirection() { return direction; }
+    public Vector2f getOrientation() { return orientation; }
 }
