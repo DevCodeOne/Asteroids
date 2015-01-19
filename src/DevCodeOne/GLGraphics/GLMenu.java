@@ -1,6 +1,8 @@
-package DevCodeOne.Graphics;
+package DevCodeOne.GLGraphics;
 
-public class Menu extends Component{
+import org.lwjgl.opengl.GL11;
+
+public class GLMenu extends GLComponent{
 
     private String items[];
     private int fontSize;
@@ -8,26 +10,26 @@ public class Menu extends Component{
     private int starty;
     private int selectedItem;
 
-    public Menu(String items[], int fontSize, int startx, int starty) {
+    public GLMenu(String items[], int fontSize, int startx, int starty) {
         this.items = items;
         this.fontSize = fontSize;
         this.startx = startx;
         this.starty = starty;
     }
 
-    public void draw(PixGraphics graphics) {
-        this.draw(graphics, 0, 0);
+    public void draw() {
+        this.draw(0, 0);
     }
 
-    public void draw(PixGraphics graphics, int offx, int offy) {
-        int height = graphics.calculateStringHeight(items[0], fontSize) + fontSize*2;
+    public void draw(int offx, int offy) {
+        int height = GLUtil.calculateStringHeight(items[0], fontSize) + fontSize*2;
         int posy = starty;
         for (int i = 0; i < items.length; i++) {
             if (i != selectedItem)
-                graphics.setColor(PixGraphics.BLUE);
+                GL11.glColor3b((byte)200, (byte)50, (byte)50);
             else
-                graphics.setColor(255 << 16 | 255 << 8 | 255);
-            graphics.drawString(items[i], startx + offx, posy + offy, fontSize);
+                GL11.glColor3b((byte) 122, (byte) 122, (byte) 122);
+            GLUtil.drawString(items[i], startx + offx, posy + offy, fontSize);
             posy += height;
         }
     }

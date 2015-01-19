@@ -1,6 +1,5 @@
 package DevCodeOne.GameMechanics;
 
-import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
 
 public class Asteroid extends Entity {
@@ -56,7 +55,7 @@ public class Asteroid extends Entity {
             }
             entities[2] = new Item(vertices, getPosition(), getColor());
         }
-        Particle particles[] = new Particle[512];
+        Particle particles[] = new Particle[1024];
         float it = (float) Math.PI * 2 / particles.length;
         float val = 0;
         for (int i = 0; i < particles.length; i++) {

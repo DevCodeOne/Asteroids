@@ -72,7 +72,7 @@ public class Player extends Entity {
     }
 
     public void shoot(Map map) {
-        if (!hasItems()) {
+        if (true) { /* improve this shit */
             Bullet bullet = new Bullet(2, new Vector2f(getVector(0)), getOrientation(), getColor());
             map.add(bullet);
         } else {

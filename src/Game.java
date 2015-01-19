@@ -1,51 +1,56 @@
+import DevCodeOne.GLGraphics.GLDisplay;
+import DevCodeOne.GLGraphics.GLDrawInterface;
+import DevCodeOne.GLGraphics.GLMenu;
 import DevCodeOne.GameMechanics.*;
-import DevCodeOne.Graphics.*;
-import DevCodeOne.Input.KeyInput;
-import DevCodeOne.Input.KeyboardHandler;
 import DevCodeOne.Mathematics.Vector2f;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
-import java.awt.event.KeyEvent;
+public class Game implements GLDrawInterface, Tick {
 
-public class Game implements DrawInterface, Tick, KeyInput {
-
-    private Display display;
+    private GLDisplay display;
     private GameClock clock;
     private Asteroid asteroids[];
     private Player player;
     private Map map;
-    private KeyboardHandler handler;
     private int timer = 10;
     private boolean shot;
-    private int resx, resy;
-    private Menu menu, endingMenu;
+    private int width, height;
+    private GLMenu menu, endingMenu;
     private boolean init;
     private boolean ending;
 
-    public Game(int width, int height, int resx, int resy) {
-        this.resx = resx;
-        this.resy = resy;
+    public Game(int width, int height) {
+        this.width = width;
+        this.height = height;
         clock = new GameClock(256, 12);
-        display = new Display(width, height, resx, resy, this);
-        handler = new KeyboardHandler(this, clock, display);
-        menu = new Menu(new String[]{"Easy", "Normal", "Difficult"}, 10, 100, 100);
-        endingMenu = new Menu(new String[]{"Play Again"}, 10, 100, 100);
+        display = new GLDisplay(width, height, this);
+        menu = new GLMenu(new String[]{"Easy", "Normal", "Difficult"}, 10, 100, 100);
+        endingMenu = new GLMenu(new String[]{"Play Again"}, 10, 100, 100);
         display.addComponent(menu);
         clock.add(display);
-        clock.start_clock();
+        gameLoop();
+    }
+
+    public void gameLoop() {
+        while(!org.lwjgl.opengl.Display.isCloseRequested()) {
+            clock.run();
+            events();
+        }
     }
 
     public void initGame(int numberAsteroids) {
-        map = new Map(resx, resy);
+        map = new Map(width, height);
         asteroids = new Asteroid[numberAsteroids];
         for (int i = 0; i < asteroids.length; i++) {
             float rand = (float) (Math.random() * Math.PI * 2);
             int color = ((int) (Math.random()*122) + 122) << 16 | ((int) (Math.random()*122) + 122) << 8 | ((int) (Math.random()*122) + 122);
-            asteroids[i] = new Asteroid(50, new Vector2f((float) Math.random() * resx, (float) Math.random() * resy), color);
+            asteroids[i] = new Asteroid(50, new Vector2f((float) Math.random() * width, (float) Math.random() * height), color);
             asteroids[i].setVelocityTo((float)Math.sin(rand), (float)Math.cos(rand));
             map.add(asteroids[i]);
         }
         int color = ((int) (Math.random()*122) + 122) << 16 | ((int) (Math.random()*122) + 122) << 8 | ((int) (Math.random()*122) + 122);
-        player = new Player(new Vector2f[]{new Vector2f(0, -10), new Vector2f(-7.5f, 10), new Vector2f(0, 5), new Vector2f(7.5f, 10)}, new Vector2f(resx/2- 100, resy/2 - 100), 100, color);
+        player = new Player(new Vector2f[]{new Vector2f(0, -10), new Vector2f(-7.5f, 10), new Vector2f(0, 5), new Vector2f(7.5f, 10)}, new Vector2f(width/2- 100, height/2 - 100), 100, color);
         map.add(player);
         clock.add(map);
         clock.add(this);
@@ -64,14 +69,18 @@ public class Game implements DrawInterface, Tick, KeyInput {
         }
     }
 
-    public void draw(PixGraphics graphics) {
+    public void draw() {
         if (init) {
-            map.draw(graphics);
+            map.draw();
             float life = player.getLife() / 10;
-            graphics.setColor(PixGraphics.BLUE);
+            GL11.glColor3b((byte) 200, (byte) 50, (byte) 50);
+            GL11.glPointSize(10);
+            GL11.glBegin(GL11.GL_POINTS);
             for (int i = 0; i <= life; i++) {
-                graphics.dot_norm(i * 12, 20, 10);
+                GL11.glVertex2f(i * 12 + 10, 20);
             }
+            GL11.glEnd();
+            GL11.glPointSize(1);
             if (map.getAsteroidsCount() == 0) {
                 timer--;
                 int color = ((int) (Math.random() * 122) + 122) << 16 | ((int) (Math.random() * 122) + 122) << 8 | ((int) (Math.random() * 122) + 122);
@@ -92,13 +101,75 @@ public class Game implements DrawInterface, Tick, KeyInput {
                 }
             }
         }
-        //graphics.dot(map.getWidth() / 2, map.getHeight() / 2, 1);
-        //graphics.drawString("Hello World", 100, 100, 5);
     }
 
-    @Override
-    public void handleKeys(boolean[] keys) {
+    public void events() {
         if (init && !ending) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+                player.incVelocityBy(player.getOrientation().getX() * 0.25f, 0);
+                player.incVelocityBy(0, player.getOrientation().getY() * 0.25f);
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+                player.incVelocityBy(-player.getOrientation().getX() * 0.25f, 0);
+                player.incVelocityBy(0, -player.getOrientation().getY() * 0.25f);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+                player.rotate(-0.05f);
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+                player.rotate(0.05f);
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !shot) {
+                player.shoot(map);
+                shot = true;
+            } else if (!Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+                shot = false;
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                System.exit(0);
+            }
+        } else if (!ending) {
+            while (Keyboard.next()) {
+                if (Keyboard.getEventKeyState()) {
+                    if (Keyboard.getEventKey() == Keyboard.KEY_DOWN)
+                        menu.select(menu.getIndex() + 1);
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_UP)
+                        menu.select(menu.getIndex() - 1);
+                    if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
+                        int numberAsteroids = 0;
+                        if (menu.getSelectedItem().equals("Easy")) {
+                            numberAsteroids = 1;
+                        } else if (menu.getSelectedItem().equals("Normal")) {
+                            numberAsteroids = 15;
+                        } else {
+                            numberAsteroids = 20;
+                        }
+                        display.removeComponent(menu);
+                        initGame(numberAsteroids);
+                    }
+                }
+            }
+        } else {
+            while (Keyboard.next()) {
+                if (Keyboard.getEventKeyState()) {
+                    if (Keyboard.getEventKey() == Keyboard.KEY_DOWN)
+                        menu.select(menu.getIndex() + 1);
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_UP)
+                        menu.select(menu.getIndex() - 1);
+                    else if (Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
+                        if (endingMenu.getSelectedItem().equals("Play Again")) {
+                            display.removeComponent(endingMenu);
+                            ending = false;
+                            player.destroy();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void handleKeys(boolean[] keys) {
+        /*if (init && !ending) {
             if (keys[KeyEvent.VK_W]) {
                 player.incVelocityBy(player.getOrientation().getX() * 0.25f, 0);
                 player.incVelocityBy(0, player.getOrientation().getY() * 0.25f);
@@ -117,8 +188,7 @@ public class Game implements DrawInterface, Tick, KeyInput {
             }
 
             if (keys[KeyEvent.VK_SPACE] && !shot) {
-                Bullet bullet = new Bullet(2, new Vector2f(player.getVector(0)), player.getOrientation(), player.getColor());
-                map.add(bullet);
+                player.shoot(map);
                 shot = true;
             } else if (!keys[KeyEvent.VK_SPACE]) {
                 shot = false;
@@ -164,6 +234,6 @@ public class Game implements DrawInterface, Tick, KeyInput {
                     player.destroy();
                 }
             }
-        }
+        }*/
     }
 }

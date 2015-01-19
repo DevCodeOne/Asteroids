@@ -1,7 +1,7 @@
 package DevCodeOne.GameMechanics;
 
-import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
+import org.lwjgl.opengl.GL11;
 
 public class Entity {
 
@@ -24,15 +24,17 @@ public class Entity {
         }
     }
 
-    public void draw(PixGraphics graphics, int offx, int offy) {
-        //drawBoundingBox(graphics, offx, offy);
+    public void draw(int offx, int offy) {
         float gesx = (float) (position.getX()+offx);
         float gesy = (float) (position.getY()+offy);
-        graphics.setColor(color);
+        GL11.glColor3ub((byte) ((color >> 16) & 0xFF), (byte) ((color >> 8) & 0xFF), (byte) ((color) & 0xFF));
+        GL11.glBegin(GL11.GL_LINES);
         for (int i = 0; i < vertices.length; i++)  {
             int next = (i + 1) % vertices.length;
-            graphics.drawLine(vertices[i].getX() + gesx, vertices[i].getY() + gesy, vertices[next].getX() + gesx, vertices[next].getY() + gesy);
+            GL11.glVertex2f(vertices[i].getX() + gesx, vertices[i].getY() + gesy);
+            GL11.glVertex2f(vertices[next].getX() + gesx, vertices[next].getY() + gesy);
         }
+        GL11.glEnd();
     }
 
     public void setMaxVelocity(float velocity) {
@@ -41,13 +43,6 @@ public class Entity {
 
     public float getMaxVelocity() {
         return MAX_VELOCITY;
-    }
-
-    public void drawBoundingBox(PixGraphics graphics, int offx, int offy) {
-        graphics.drawLine(min.getX() + offx, min.getY() + offy, max.getX() + offx, min.getY() + offy);
-        graphics.drawLine(max.getX() + offx, min.getY() + offy, max.getX() + offx, max.getY() + offy);
-        graphics.drawLine(max.getX() + offx, max.getY() + offy, min.getX() + offx, max.getY() + offy);
-        graphics.drawLine(min.getX() + offx, max.getY() + offy, min.getX() + offx, min.getY() + offy);
     }
 
     public void createBoundingBox() {

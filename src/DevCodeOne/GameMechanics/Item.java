@@ -12,7 +12,12 @@ public class Item extends Entity {
     }
 
     public void shoot(Player player, Map map) {
-
+        int rot = 0;
+        for (int i = 0; i < 36; i++) {
+            Bullet bullet = new Bullet(4, new Vector2f(getVector(i)), new Vector2f((float) Math.cos(Math.toRadians(rot)), (float) Math.sin(Math.toRadians(rot))), getColor());
+            map.add(bullet);
+            rot += 10;
+        }
     }
 
     public void incVelocityBy(float x, float y) { }

@@ -1,4 +1,4 @@
-package DevCodeOne.Graphics;
+package DevCodeOne.GLGraphics;
 
 public class Font {
 

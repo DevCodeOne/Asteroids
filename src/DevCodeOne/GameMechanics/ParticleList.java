@@ -1,6 +1,6 @@
 package DevCodeOne.GameMechanics;
 
-import DevCodeOne.Graphics.PixGraphics;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
@@ -16,10 +16,12 @@ public class ParticleList {
         particles.add(particle);
     }
 
-    public void draw(PixGraphics graphics, int offx, int offy) {
+    public void draw(int offx, int offy) {
+        GL11.glBegin(GL11.GL_POINTS);
         for (Particle particle : particles) {
-            particle.draw(graphics, offx, offy);
+            particle.draw(offx, offy);
         }
+        GL11.glEnd();
     }
 
     public void iterate() {

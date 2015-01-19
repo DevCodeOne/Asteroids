@@ -1,6 +1,5 @@
 package DevCodeOne.GameMechanics;
 
-import DevCodeOne.Graphics.PixGraphics;
 import DevCodeOne.Mathematics.Vector2f;
 
 import java.util.ArrayList;
@@ -24,11 +23,11 @@ public class Map implements Tick {
         this.asteroidsCount = -1;
     }
 
-    public void draw(PixGraphics graphics) {
+    public void draw() {
         for (Entity entity : entities) {
-            entity.draw(graphics, (int)offset.getX(), (int)offset.getY());
+            entity.draw((int)offset.getX(), (int)offset.getY());
         }
-        particleList.draw(graphics, (int) offset.getX(), (int) offset.getY());
+        particleList.draw((int) offset.getX(), (int) offset.getY());
     }
 
     public void addParticles(Particle particles[]) {
